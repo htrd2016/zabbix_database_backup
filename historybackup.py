@@ -74,7 +74,7 @@ def get_min_clock_from_src(cur, conn, tablename):
 
     return (int)(result);
 
-'''
+
 def get_min_clock_in_range_from_src_table(cur, conn, tablename, min, max):
     sql = 'select min(clock) from '+ tablename + " where clock > "+str(min)+" and clock<=" + str(max)  
     logging.debug(sql)
@@ -90,7 +90,7 @@ def get_min_clock_in_range_from_src_table(cur, conn, tablename, min, max):
        result = result[0]
 
     return (int)(result);
-'''
+
 
 def backuptable(srccur, srcconn, descur, desconn, tablename, days):
     logging.debug("-----------start backup table "+tablename+" at"+time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))+"----------------")
@@ -129,7 +129,7 @@ def backuptable(srccur, srcconn, descur, desconn, tablename, days):
             break;
 
         if(ret_count == 0):
-          min = get_min_clock_in_range_from_src_table(srccur, srcconn, tablename,end_min_clock, time_to_backed_start)
+          min = get_min_clock_in_range_from_src_table(srccur, srcconn, tablename, end_min_clock, time_to_backed_start)
           if(min>start_min_clock):
               start_min_clock = min;
           else:
@@ -138,7 +138,7 @@ def backuptable(srccur, srcconn, descur, desconn, tablename, days):
         else:
           start_min_clock = end_min_clock
 
-        end_min_clock = end_min_clock + 7200
+        end_min_clock = start_min_clock + 7200
     logging.debug(tablename+" total backup count:"+str(total_count))
     logging.debug("-----------end backup table "+tablename+" at"+time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))+"----------------")
     return total_count
