@@ -144,7 +144,7 @@ def backuptable(srccur, srcconn, descur, desconn, tablename, days):
     return total_count
 
 def backuptable_range(srccur, srcconn, descur, desconn, tablename, start_timestamp, end_timestamp):
-   sql = 'select * from '+ tablename +' where clock > %s and clock <= %s'
+   sql = 'select * from '+ tablename +' where clock > %s and clock <= %s group by floor(clock/60),itemid;'
 
    logging.debug("time range:"+str(start_timestamp)+str(end_timestamp))
 
@@ -195,7 +195,8 @@ def backup(table_name, timestamp):
     print "start backup..."
     desconn=MySQLdb.connect(mysql_ip_des,mysql_username_des,mysql_pass_des,mysql_dbname_des,mysql_port_des)    
     srcconn=MySQLdb.connect(mysql_ip_src,mysql_username_src,mysql_pass_src,mysql_dbname_src,mysql_port_src)
-    srccur=srcconn.cursor()
+    srccur=srcconn.cursor() 
+    srccur.execute("SET sql_mode = '';")
     descur=desconn.cursor()
     backuptable(srccur, srcconn, descur, desconn, table_name, timestamp)
     #backuptable(srccur, srcconn, descur, desconn, 'history_str', timestamp)
